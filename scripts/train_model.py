@@ -4,14 +4,30 @@ from pathlib import Path
 
 import numpy as np
 import tensorflow as tf
+from sklearn.metrics import classification_report
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
 POSE_FEATURE_COUNT = 33 * 4  # extract_landmarks() puts pose first: 33 landmarks x (x, y, z, visibility)
 
 
+def normalize_hand_landmarks(features):
+    """Make each hand's landmarks invariant to where it sits in the camera frame and how
+    far it is from the camera: translate to that hand's wrist and scale by its own span.
+    Without this, the model partly learns screen position instead of hand shape/motion,
+    and a sign can misclassify just because the signer is framed differently than during
+    data collection."""
+    frames = features.reshape(features.shape[0], 2, 21, 3)  # (frame, hand, landmark, xyz)
+    translated = frames - frames[:, :, 0:1, :]  # landmark 0 is the wrist
+    scale = np.linalg.norm(translated, axis=3).max(axis=2)  # (frame, hand)
+    safe_scale = np.where(scale < 1e-6, 1.0, scale)  # a hand not detected is all zeros; leave it at zero
+    normalized = translated / safe_scale[:, :, np.newaxis, np.newaxis]
+    return normalized.reshape(features.shape[0], -1).astype(np.float32)
+
+
 def load_dataset(data_dir):
-    """Load all saved sequences (hands-only, pose dropped) and their folder names as labels."""
+    """Load all saved sequences (hands-only, pose dropped, landmarks normalized) and their
+    folder names as labels."""
     data_path = Path(data_dir)
     sequences = []
     labels = []
@@ -21,7 +37,7 @@ def load_dataset(data_dir):
             sequence = np.load(sequence_path)
             if sequence.ndim != 2:
                 raise ValueError(f"{sequence_path} must have shape (frames, features), got {sequence.shape}")
-            sequences.append(sequence[:, POSE_FEATURE_COUNT:].astype(np.float32))
+            sequences.append(normalize_hand_landmarks(sequence[:, POSE_FEATURE_COUNT:].astype(np.float32)))
             labels.append(label_dir.name)
 
     if not sequences:
@@ -166,6 +182,9 @@ def main():
 
     test_loss, test_accuracy = model.evaluate(test_features, test_labels, verbose=0)
     print(f"Test accuracy: {test_accuracy:.2%}")
+
+    predicted_labels = np.argmax(model.predict(test_features, verbose=0), axis=1)
+    print(classification_report(test_labels, predicted_labels, labels=range(len(class_names)), target_names=class_names, zero_division=0))
 
     model_path = Path(args.model_dir)
     model_path.mkdir(parents=True, exist_ok=True)

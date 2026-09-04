@@ -3,11 +3,17 @@
   "featureCount": 126,
   "labels": [
     "I",
+    "bathroom",
     "hello",
     "help",
+    "more",
     "need",
+    "no",
+    "pain",
+    "stop",
     "want",
-    "water"
+    "water",
+    "yes"
   ],
   "layers": [
     {
@@ -29,7 +35,7 @@
     },
     {
       "type": "dense",
-      "units": 6,
+      "units": 12,
       "activation": "softmax"
     }
   ],
@@ -82,12 +88,12 @@
     {
       "shape": [
         32,
-        6
+        12
       ]
     },
     {
       "shape": [
-        6
+        12
       ]
     }
   ]
