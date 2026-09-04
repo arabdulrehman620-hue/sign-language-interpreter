@@ -1,0 +1,19 @@
+# Local Claude Code tool config/session state (not project code)
+.claude/
+
+# Python virtual environment (2GB+, regenerate with: pip install -r requirements.txt)
+.venv/
+.venv311/
+__pycache__/
+*.pyc
+
+# Android build artifacts
+android_app/.gradle/
+android_app/app/build/
+android_app/build/
+
+# The pretrained word_model.tflite is a large (36MB) third-party download
+# (see models/word_model/README.md for where to re-download it). Excluded
+# to keep the repo small; everything else in models/ (your own trained
+# model + labels + browser export) is tracked.
+models/word_model/word_model.tflite

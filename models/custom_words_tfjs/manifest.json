@@ -1,0 +1,94 @@
+{
+  "sequenceLength": 30,
+  "featureCount": 126,
+  "labels": [
+    "I",
+    "hello",
+    "help",
+    "need",
+    "want",
+    "water"
+  ],
+  "layers": [
+    {
+      "type": "lstm",
+      "units": 64,
+      "returnSequences": true,
+      "activation": "tanh"
+    },
+    {
+      "type": "lstm",
+      "units": 32,
+      "returnSequences": false,
+      "activation": "tanh"
+    },
+    {
+      "type": "dense",
+      "units": 32,
+      "activation": "relu"
+    },
+    {
+      "type": "dense",
+      "units": 6,
+      "activation": "softmax"
+    }
+  ],
+  "weights": [
+    {
+      "shape": [
+        126,
+        256
+      ]
+    },
+    {
+      "shape": [
+        64,
+        256
+      ]
+    },
+    {
+      "shape": [
+        256
+      ]
+    },
+    {
+      "shape": [
+        64,
+        128
+      ]
+    },
+    {
+      "shape": [
+        32,
+        128
+      ]
+    },
+    {
+      "shape": [
+        128
+      ]
+    },
+    {
+      "shape": [
+        32,
+        32
+      ]
+    },
+    {
+      "shape": [
+        32
+      ]
+    },
+    {
+      "shape": [
+        32,
+        6
+      ]
+    },
+    {
+      "shape": [
+        6
+      ]
+    }
+  ]
+}
