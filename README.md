@@ -2,6 +2,29 @@
 
 This project has three independent parts. Pick the one you need.
 
+## Setup (one-time)
+
+Both the web app (section 1) and the Python scripts (section 2) run out of a virtual
+environment at `.venv/`. Requires Python 3.9–3.11 (mediapipe and tensorflow don't yet
+support 3.12+) — check your version with `python --version`.
+
+From the `sign_language_app` folder, create the venv:
+
+```powershell
+cd sign_language_app
+python -m venv .venv
+```
+
+If your default `python` is 3.12 or newer, point `venv` at an older interpreter instead,
+e.g. if you have Python 3.11 installed:
+
+```powershell
+py -3.11 -m venv .venv
+```
+
+This only creates the environment — see section 2 below to install the actual Python
+dependencies (`requirements.txt`) into it.
+
 ## 1. Web app (`index.html`)
 
 The page recognizes a hand sign from the webcam using MediaPipe Hands + TensorFlow.js
