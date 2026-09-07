@@ -17,3 +17,24 @@ android_app/build/
 # to keep the repo small; everything else in models/ (your own trained
 # model + labels + browser export) is tracked.
 models/word_model/word_model.tflite
+
+# Secrets — never commit these
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+*.jks
+key.properties
+local.properties
+google-services.json
+GoogleService-Info.plist
+**/serviceAccountKey*.json
+**/service-account*.json
+credentials.json
+secrets.json
+id_rsa
+id_ed25519
+*.ppk
